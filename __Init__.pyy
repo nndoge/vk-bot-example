@@ -1,0 +1,107 @@
+import os
+import sys
+import platform
+import zipfile
+
+sys.path.append('./System')
+
+sys.stdout.write('\x1b]2;GH.CP Init | Developer: Max Stewart\x07')
+
+url = "https://drive.google.com/uc?export=download&id=1DSUORDooNnH4_xb6H56OEpsZMuhxG6an"
+
+def checkos():
+
+	global sysname
+
+	sysname = platform.system()
+	getreq()
+
+def getreq():
+
+	if sysname == 'Windows':
+
+		os.system('cls')
+
+	else:
+
+		os.system('clear')
+
+	print('Detected ' + sysname + ' Operating System.')
+	print()
+
+	print('[*] Installing required modules...')
+
+	if sysname == 'Windows':
+
+		os.system('pip3 install vk_api > nul2>&1')
+		os.system('pip3 install datetime > nul2>&1')
+		os.system('pip3 install wget > nul2>&1')
+
+	else:
+
+		os.system('pip3 install vk_api > /dev/null 2>&1')
+		os.system('pip3 install datetime > /dev/null 2>&1')
+		os.system('pip3 install wget > /dev/null 2>&1')
+
+	print('[*] Creating workspace directories...')
+
+	if sysname == 'Windows':
+		os.system('mkdir System > nul 2>&1')
+	else:
+		os.system('mkdir System > /dev/null 2>&1')
+
+	print('[*] Verifying installation...')
+
+	z = checkreq()
+	
+	if z == 0:
+		n = 0
+		import wget
+	else:
+		n = 1
+		print("Error: In verifying.")
+		input("Press enter to exit: ")
+		sys.exit()
+		
+	print('[*] Install additional files...')
+	print()
+	
+	filename = wget.download(url)
+	z = zipfile.ZipFile('requirements.zip', 'r')
+	z.extractall("./System/")
+	z.close()
+	if sysname == 'Windows':
+		os.system("del requirements.zip")
+	else:
+		os.system("rm requirements.zip")
+	if n == 0:
+		print("\n\nWorkspace succesfully configured!")
+		input("Press enter to exit: ")
+	else:
+		print("Error: In verifying.")
+		input("Press enter to exit: ")
+	print()
+	sys.exit()
+
+def checkreq():
+
+	if sysname == 'Windows':
+		x = os.system('python -c \"import vk_api\" > nul 2>&1')
+		c = os.system('python -c \"import datetime\" > nul 2>&1')
+		v = os.system('python -c \"import wget\" > nul 2>&1')
+
+	else:
+		x = os.system('python3 -c \"import vk_api\" > /dev/null 2>&1')
+		c = os.system('python3 -c \"import datetime\" > /dev/null 2>&1')
+		v = os.system('python3 -c \"import wget\" > /dev/null 2>&1')
+
+	if x == 0:
+		return 0
+	elif c == 0:
+		return 0
+	elif v == 0:
+		return 0
+	else:
+		return 1
+
+checkos()
